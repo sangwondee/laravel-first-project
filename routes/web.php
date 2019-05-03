@@ -27,9 +27,6 @@ Route::post('contact-us', 'ContactFormController@store')->name('contact.store');
 // Route::patch('customers/{customer}', 'CustomersController@update');
 // Route::delete('customers/{customer}', 'CustomersController@destroy');
 
-
-///
-
 Route::resource('customers', 'CustomersController');
 Auth::routes();
 
