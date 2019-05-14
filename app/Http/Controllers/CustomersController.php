@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Customer;
 use Illuminate\Http\Request;
+use App\Events\NewCustomerHasRegisteredEvent;
 
 class CustomersController extends Controller
 {
@@ -30,9 +31,12 @@ class CustomersController extends Controller
 
     public function store()
     {   
-        Customer::create($this->validateRequest());
+        $customer = Customer::create($this->validateRequest());
 
-    	return redirect('customers');
+        // Event and Lisnter for send email;
+        event(new NewCustomerHasRegisteredEvent($customer)); 
+
+    	// return redirect('customers');
     }
 
     public function show(Customer $customer) // Route Model Binding
