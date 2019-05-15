@@ -33,7 +33,6 @@ class AddCompanyCommand extends Command
             $this->warn('No new company was added.');
         }
 
-
         // สามารถแสดงข้อความต่างๆ ได้;
         // $this->info('show info message');
         // $this->warn('show warning message');
