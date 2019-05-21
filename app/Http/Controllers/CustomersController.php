@@ -11,7 +11,8 @@ class CustomersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index']);
+        $this->middleware('auth')
+            ->except(['index']);
     }
 
     public function index()
@@ -19,26 +20,30 @@ class CustomersController extends Controller
         $customers = Customer::with('company')
             ->orderBy('created_at', 'desc')
             ->paginate(5);
-    
+
 		return view('customers.index', compact('customers'));
     }
 
     public function create()
     {
         $companies = Company::all();
+
         $customer = new Customer;
 
         return view('customers.create', compact('companies','customer'));
     }
 
     public function store()
-    {   
+    {
+        // Authorize class ใน customer policy;
+        $this->authorize('create', Customer::class);
+
         $customer = Customer::create($this->validateRequest());
 
         // Event and Lisnter for send email;
-        event(new NewCustomerHasRegisteredEvent($customer)); 
+        event(new NewCustomerHasRegisteredEvent($customer));
 
-    	// return redirect('customers');
+    	return redirect('customers');
     }
 
     public function show(Customer $customer) // Route Model Binding
@@ -62,6 +67,8 @@ class CustomersController extends Controller
 
     public function destroy(Customer $customer)
     {
+        $this->authorize('delete', $customer);
+
         $customer->delete();
 
         return redirect('customers');
